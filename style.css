@@ -1,0 +1,168 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+canvas {
+  display: block;
+}
+
+/* 左側白色選單（預設隱藏，滑鼠靠近左邊 100px 時顯示） */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 100vh;
+  background: #ffffff;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 1000;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
+
+  /* 初始從畫面外滑入 */
+  transform: translateX(-100%);
+  transition: transform .18s ease, box-shadow .18s;
+  pointer-events: none; /* 隱藏時不攔截滑鼠 */
+}
+.sidebar.visible {
+  transform: translateX(0);
+  pointer-events: auto;
+  box-shadow: 4px 0 18px rgba(0,0,0,0.10);
+}
+.sidebar h2 {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sidebar li + li { margin-top: 8px; }
+.menu-item {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: none;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: color .12s ease, background .12s, transform .08s;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+
+  /* 新增：文字樣式 */
+  color: #000;        /* 預設黑色文字 */
+  font-size: 20px;    /* 文字大小 20px */
+  line-height: 1.2;
+}
+.menu-item:hover,
+.menu-item:focus,
+.menu-item:active {
+  background: #f5f7fb;
+  transform: translateY(-1px);
+  color: #ff2b2b; /* 靠近時顯示紅色文字 */
+}
+.menu-item.active {
+  background: #eaf0ff;
+  color: #ff2b2b;
+}
+
+/* 中央資訊區 */
+.center-area {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 500; /* 介於畫布與側邊選單之間 */
+  text-align: center;
+  pointer-events: auto;
+  user-select: none;
+}
+
+/* 新增：白色框包覆中間資訊 */
+.center-area .info {
+  background: #ffffff;
+  padding: 18px 22px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  display: inline-block; /* 依內容大小撐開 */
+  min-width: 240px;
+}
+
+/* 保留既有文字樣式 */
+.center-area .info .id {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #111;
+}
+.center-area .info .name {
+  font-size: 24px;
+  margin-bottom: 4px;
+  color: #111;
+}
+.center-area .info .class {
+  font-size: 20px;
+  margin-bottom: 12px;
+  color: #444;
+}
+.profile-photo {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  border: 2px solid #fff;
+  display: inline-block;
+  margin-top: 8px; /* 與文字保持間距 */
+}
+@media (max-width: 600px) {
+  .center-area .info .id { font-size: 20px; }
+  .center-area .info .name { font-size: 18px; }
+  .center-area .info .class { font-size: 16px; }
+  .profile-photo { width: 120px; height: 120px; }
+}
+
+/* IFRAME overlay（全螢幕 80%）*/
+.iframe-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.6);
+  z-index: 2000;
+}
+.iframe-wrapper {
+  width: 80vw;
+  height: 80vh;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  position: relative;
+}
+.iframe-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.iframe-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2010;
+}
+.iframe-close button {
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: 0;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.iframe-close button:hover { background: rgba(0,0,0,0.8); }

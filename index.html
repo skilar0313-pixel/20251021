@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sketch</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script>
+  </head>
+
+  <body>
+    <nav class="sidebar" aria-label="主要選單">
+      <h2>選單</h2>
+      <ul>
+        <li><button class="menu-item" data-id="1">作品一</button></li>
+        <li><button class="menu-item" data-id="2">作品二</button></li>
+        <li><button class="menu-item" data-id="3">作品三</button></li>
+      </ul>
+    </nav>
+
+    <!-- 中央文字與照片 -->
+    <div class="center-area" role="region" aria-label="個人資訊">
+      <div class="info">
+        <div class="id">414730092</div>
+        <div class="name">許詠鈐</div>
+        <div class="class">教育科技A班</div>
+        <img src="photo.jpg" alt="許詠鈐 照片" class="profile-photo">
+      </div>
+    </div>
+
+    <script>
+      (function(){
+        const THRESHOLD = 100; // 距左側 X <= 100 顯示選單
+        const sidebar = document.querySelector('.sidebar');
+        if (!sidebar) return;
+        let visible = false;
+
+        function show() {
+          sidebar.classList.add('visible');
+          visible = true;
+        }
+        function hide() {
+          sidebar.classList.remove('visible');
+          visible = false;
+        }
+
+        function onMove(e){
+          const x = e.touches ? e.touches[0].clientX : e.clientX;
+          if (x <= THRESHOLD) {
+            if (!visible) show();
+          } else {
+            // 隱藏條件：游標離開左側寬度外（加入緩衝值避免閃爍）
+            const sbWidth = sidebar.getBoundingClientRect().width || 220;
+            if (visible && x > sbWidth + 20) hide();
+          }
+        }
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('touchstart', onMove);
+        // 當滑鼠離開選單區域時也隱藏
+        sidebar.addEventListener('mouseleave', hide);
+
+        // 選單按鈕行為（保留 selectSketch 呼叫點）
+        document.querySelectorAll('.menu-item').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.menu-item').forEach(b=>b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            const id = e.currentTarget.dataset.id;
+            if (window.selectSketch) window.selectSketch(id);
+          });
+        });
+      })();
+    </script>
+    <script src="color_settings.js"></script>
+    <script src="sketch.js"></script>
+  </body>
+</html>
